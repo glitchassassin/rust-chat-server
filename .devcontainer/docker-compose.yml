@@ -1,0 +1,14 @@
+services:
+  chat:
+    build: .
+    volumes:
+      - ../:/workspaces:cached
+    command: sleep infinity
+  db:
+    image: redis:7.2.0
+    command: redis-server --save 60 1 --appendonly yes
+    volumes:
+      - redis-data:/data
+
+volumes:
+  redis-data:
