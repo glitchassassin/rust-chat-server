@@ -12,9 +12,9 @@ use crate::{
 
 async fn rooms(pool: web::Data<DbPool>) -> actix_web::Result<impl Responder> {
     let rooms = web::block(move || {
-        let mut conn = pool.get().expect("couldn't get db connection from pool");
+        let mut conn = pool.get()?;
 
-        Room::get_all(&mut conn)?
+        Room::get_all(&mut conn)
     })
     .await?
     .map_err(error::ErrorInternalServerError)?;
@@ -26,13 +26,13 @@ async fn new_room(
     request: web::Json<NewRoom>,
 ) -> actix_web::Result<impl Responder> {
     let new_room = web::block(move || {
-        let mut conn = pool.get().expect("couldn't get db connection from pool");
+        let mut conn = pool.get()?;
 
         let new_room = NewRoom {
             name: request.name.clone(),
         };
 
-        Room::insert(&mut conn, new_room)?
+        Room::insert(&mut conn, new_room)
     })
     .await?
     .map_err(error::ErrorInternalServerError)?;

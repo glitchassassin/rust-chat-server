@@ -1,6 +1,7 @@
 pub mod models;
 pub mod rooms;
 pub mod schema;
+pub mod users;
 use std::env;
 
 use actix_web::{get, web, App, HttpServer, Responder};
@@ -28,6 +29,7 @@ async fn main() -> std::io::Result<()> {
             .app_data(web::Data::new(pool.clone()))
             .service(index)
             .service(rooms::routes())
+            .service(users::routes())
     })
     .bind(("127.0.0.1", 9090))?
     .run()
